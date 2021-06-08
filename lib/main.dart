@@ -1,5 +1,4 @@
 
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -27,36 +26,41 @@ class _MyappState extends State<Myapp> {
   var quantity = TextEditingController();
   var price = TextEditingController();
   var httpservices = Httpservices();
-   var data;
+  var data;
+
+  // final Future wait = Future.delayed(
+  //   const Duration(seconds: 2),
+  //       () => data.toString(),
+  // );
   Widget build(BuildContext context) {
     return Scaffold(
-     appBar: AppBar(
-       title: Text('http req'),
-     ),
+      appBar: AppBar(
+        title: Text('http req'),
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
 
-         Container(
+          Container(
 
-              child: TextField(
-                controller: id,
-                decoration: InputDecoration(
-                  hintText: 'user id',
-                  hintStyle: TextStyle(
-                    color: Colors.black,
-                  ),
-
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black),
-                  ),
+            child: TextField(
+              controller: id,
+              decoration: InputDecoration(
+                hintText: 'user id',
+                hintStyle: TextStyle(
+                  color: Colors.black,
                 ),
 
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black),
+                ),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black),
+                ),
               ),
+
             ),
+          ),
           Container(
 
             child: TextField(
@@ -119,32 +123,35 @@ class _MyappState extends State<Myapp> {
           ),
 
 
-              Center(
-                child: TextButton(child: Text('submit'),
-                  onPressed: () async{
-                  final _id = id.text;
-                  final _customer = customer.text;
-                  final _quantity = quantity.text;
-                  final _price = price.text;
-                var  _Data = httpservices.loginuser(_id, _customer,_quantity,_price);
-                  setState(() {
-                    _Data = data;
-                  });
+          Center(
+            child: TextButton(child: Text('submit'),
+              onPressed: () async{
+                final _id = id.text;
+                final _customer = customer.text;
+                final _quantity = quantity.text;
+                final _price = price.text;
+                var  _Data = await httpservices.loginuser(_id, _customer,_quantity,_price) as String;
+                setState(() {
+                  data = httpservices.ret;
 
-                  },
+                });
 
-                ),
-              ),
+              },
+
+            ),
+          ),
           Container(
-            child: FutureBuilder(
+            child: FutureBuilder<Httpservices>(
                 future: data,
-                builder: (context, snapshot){
+                builder: (BuildContext context,AsyncSnapshot snapshot){
                   if(snapshot.data != null){
-                    return Text(data);
+                    return Text('Data :- ${snapshot.data}');
                   }else{
-                    throw 'error';
+                    return CircularProgressIndicator();
                   }
+
                 }),
+
           ),
 
         ],
@@ -152,5 +159,6 @@ class _MyappState extends State<Myapp> {
     );
   }
 }
+
 
 

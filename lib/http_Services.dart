@@ -8,6 +8,7 @@ import 'data_model.dart';
 
 //
 class Httpservices{
+  var ret;
   Future<http.Response> loginuser(String id,String cu, String qu,String pr) async{
 
     var res = await http.post(
@@ -22,7 +23,7 @@ class Httpservices{
     );
     print(res.statusCode);
     if(res.statusCode == 200){
-      var  ret = jsonDecode(res.body);
+        ret = jsonDecode(res.body);
       print(ret);
 
       return ret;
