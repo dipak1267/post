@@ -1,16 +1,17 @@
 
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
 import 'data_model.dart';
 
 //
 class Httpservices{
-  Future<DataModel> loginuser(String id,String cu, String qu,String pr) async{
+  Future<http.Response> loginuser(String id,String cu, String qu,String pr) async{
 
     var res = await http.post(
-      Uri.http("reqbin.com", "/echo/post/json"),
+      Uri.https("reqbin.com", "/echo/post/json"),
       body: jsonEncode(<String, dynamic> {
         "Id": id,
         "Customer": cu,
@@ -19,14 +20,17 @@ class Httpservices{
       }),
 
     );
+    print(res.statusCode);
     if(res.statusCode == 200){
-      var str = res.body;
-      return dataModelFromJson(str);
+      var  ret = jsonDecode(res.body);
+      print(ret);
+
+      return ret;
     }else{
       throw 'data not send';
     }
-    // print(res);
-    // return res;
+    print(res);
+    return res;
   }
 
 }

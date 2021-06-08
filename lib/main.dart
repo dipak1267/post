@@ -27,7 +27,7 @@ class _MyappState extends State<Myapp> {
   var quantity = TextEditingController();
   var price = TextEditingController();
   var httpservices = Httpservices();
-  late DataModel postdata ;
+   var data;
   Widget build(BuildContext context) {
     return Scaffold(
      appBar: AppBar(
@@ -126,18 +126,26 @@ class _MyappState extends State<Myapp> {
                   final _customer = customer.text;
                   final _quantity = quantity.text;
                   final _price = price.text;
-                  DataModel data = await httpservices.loginuser(_id, _customer,_quantity,_price) as DataModel;
+                var  _Data = httpservices.loginuser(_id, _customer,_quantity,_price);
                   setState(() {
-                      postdata = data;
+                    _Data = data;
                   });
 
                   },
 
                 ),
               ),
-
-          postdata == null ? Container() : Text("this data name:-${postdata.customer} id${postdata.id}")
-
+          Container(
+            child: FutureBuilder(
+                future: data,
+                builder: (context, snapshot){
+                  if(snapshot.data != null){
+                    return Text(data);
+                  }else{
+                    throw 'error';
+                  }
+                }),
+          ),
 
         ],
       ),
