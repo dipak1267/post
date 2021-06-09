@@ -39,117 +39,158 @@ class _MyappState extends State<Myapp> {
       appBar: AppBar(
         title: Text('http req'),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-
-          Container(
-
-            child: TextField(
-              controller: id,
-              decoration: InputDecoration(
-                hintText: 'user id',
-                hintStyle: TextStyle(
-                  color: Colors.black,
-                ),
-
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
-                ),
+      body:
+      FutureBuilder<String>(
+        future: calculation,
+        builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+          List<Widget> children;
+          if (snapshot.hasData) {
+            children = <Widget>[
+              const Icon(
+                Icons.check_circle_outline,
+                color: Colors.green,
+                size: 60,
               ),
-
-            ),
-          ),
-          Container(
-
-            child: TextField(
-              controller: customer,
-              decoration: InputDecoration(
-                hintText: 'user name',
-                hintStyle: TextStyle(
-                  color: Colors.black,
-                ),
-
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
-                ),
+              Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: Text('Result: ${snapshot.data}'),
+              )
+            ];
+          } else if (snapshot.hasError) {
+            children = <Widget>[
+              const Icon(
+                Icons.error_outline,
+                color: Colors.red,
+                size: 60,
               ),
+              Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: Text('Error: ${snapshot.error}'),
+              )
+            ];
+          } else {
+            children = <Widget>[  isloading ? CircularProgressIndicator() :
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
 
+                Container(
+
+                  child: TextField(
+                    controller: id,
+                    decoration: InputDecoration(
+                      hintText: 'user id',
+                      hintStyle: TextStyle(
+                        color: Colors.black,
+                      ),
+
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                      ),
+                    ),
+
+                  ),
+                ),
+                Container(
+
+                  child: TextField(
+                    controller: customer,
+                    decoration: InputDecoration(
+                      hintText: 'user name',
+                      hintStyle: TextStyle(
+                        color: Colors.black,
+                      ),
+
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                      ),
+                    ),
+
+                  ),
+                ),
+                Container(
+
+                  child: TextField(
+                    controller: quantity,
+                    decoration: InputDecoration(
+                      hintText: 'user quantity',
+                      hintStyle: TextStyle(
+                        color: Colors.black,
+                      ),
+
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                      ),
+                    ),
+
+                  ),
+                ),
+                Container(
+
+                  child: TextField(
+                    controller: price,
+                    decoration: InputDecoration(
+                      hintText: 'price',
+                      hintStyle: TextStyle(
+                        color: Colors.black,
+                      ),
+
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                      ),
+                    ),
+
+                  ),
+                ),
+
+
+                Center(
+                  child: TextButton(child: Text('submit'),
+                    onPressed:  onclick(),
+                  ),
+                ),
+
+                Container(
+                    child: FutureBuilder(
+                        future: calculation,
+                        builder: (context,snapshot){
+                          if(snapshot.hasData){
+                            return Center(
+                              child: Text('Result : ${snapshot.data}'),
+                            );
+                          }else{
+                            throw 'eroor';
+                          }
+
+                        })
+
+                ),
+
+              ],
+            ),];
+
+          }
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: children,
             ),
-          ),
-          Container(
-
-            child: TextField(
-              controller: quantity,
-              decoration: InputDecoration(
-                hintText: 'user quantity',
-                hintStyle: TextStyle(
-                  color: Colors.black,
-                ),
-
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
-                ),
-              ),
-
-            ),
-          ),
-          Container(
-
-            child: TextField(
-              controller: price,
-              decoration: InputDecoration(
-                hintText: 'price',
-                hintStyle: TextStyle(
-                  color: Colors.black,
-                ),
-
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
-                ),
-              ),
-
-            ),
-          ),
-
-
-          Center(
-            child: TextButton(child: Text('submit'),
-              onPressed:  onclick(),
-            ),
-          ),
-
-          Container(
-              child: FutureBuilder(
-                  future: calculation,
-                  builder: (context,snapshot){
-                    if(snapshot.hasData){
-                      return Center(
-                        child: Text('Result : ${snapshot.data}'),
-                      );
-                    }else{
-                      throw 'eroor';
-                    }
-
-                  })
-
-          ),
-
-        ],
+          );
+        },
       ),
-
 
 
 
@@ -186,7 +227,7 @@ class _MyappState extends State<Myapp> {
       setState(() {
         calculation = Future.delayed(Duration.zero).then((value) {
           isloading = false;
-          return data.success;
+          return data.success.toString();
         });
       });
     }else{
