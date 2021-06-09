@@ -1,10 +1,12 @@
 
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'data_model.dart';
-import 'http_Services.dart';
+import 'package:http/http.dart' as http;
 
+import 'data_model.dart';
 
 void main(){
   runApp(MaterialApp(
@@ -25,13 +27,13 @@ class _MyappState extends State<Myapp> {
   var customer =TextEditingController();
   var quantity = TextEditingController();
   var price = TextEditingController();
-  var httpservices = Httpservices();
-  var data;
+   var data;
+   bool isloading = false;
+   Future<String>? calculation;
+  var _id,_customer,_quantity,_price;
 
-  // final Future wait = Future.delayed(
-  //   const Duration(seconds: 2),
-  //       () => data.toString(),
-  // );
+
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -125,39 +127,78 @@ class _MyappState extends State<Myapp> {
 
           Center(
             child: TextButton(child: Text('submit'),
-              onPressed: () async{
-                final _id = id.text;
-                final _customer = customer.text;
-                final _quantity = quantity.text;
-                final _price = price.text;
-                var  _Data = await httpservices.loginuser(_id, _customer,_quantity,_price) as String;
-                setState(() {
-                  data = httpservices.ret;
-
-                });
-
-              },
-
+              onPressed:  onclick(),
             ),
           ),
-          Container(
-            child: FutureBuilder<Httpservices>(
-                future: data,
-                builder: (BuildContext context,AsyncSnapshot snapshot){
-                  if(snapshot.data != null){
-                    return Text('Data :- ${snapshot.data}');
-                  }else{
-                    return CircularProgressIndicator();
-                  }
 
-                }),
+          Container(
+              child: FutureBuilder(
+                  future: calculation,
+                  builder: (context,snapshot){
+                    if(snapshot.hasData){
+                      return Center(
+                        child: Text('Result : ${snapshot.data}'),
+                      );
+                    }else{
+                      throw 'eroor';
+                    }
+
+                  })
 
           ),
 
         ],
       ),
+
+
+
+
+
     );
   }
+
+  onclick() async{
+    _id = id.text;
+    _customer = customer.text;
+    _quantity = quantity.text;
+    _price = price.text;
+    data =   loginuser(_id, _customer,_quantity,_price);
+
+    setState(() {
+
+    });
+  }
+
+   loginuser(String id,String cu, String qu,String pr) async{
+    var res = await http.post(
+      Uri.https("reqbin.com", "/echo/post/json"),
+      body: jsonEncode(<String, dynamic> {
+        "Id": id,
+        "Customer": cu,
+        "Quantity": qu,
+        "Price": pr
+      }),
+
+    );
+    if(res.statusCode == 200){
+
+      var data = dataModelFromJson(res.body);
+      setState(() {
+        calculation = Future.delayed(Duration.zero).then((value) {
+          isloading = false;
+          return data.success;
+        });
+      });
+    }else{
+      setState(() {
+        calculation = Future.delayed(Duration.zero).then((value) {
+          isloading = false;
+          return "false";
+        });
+      });
+    }
+  }
+
 }
 
 
