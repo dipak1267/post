@@ -72,29 +72,12 @@ class _MyappState extends State<Myapp> {
       body: FutureBuilder(
           future: resdata,
           builder: (context,snapshot){
-              List<Widget> children;
               if(snapshot.hasData){
-                children = <Widget>[
-                  const Icon(
-                    Icons.check_circle_outline_outlined,
-                    color: Colors.green,
-                    size: 60,
-                  ),
-                  Padding(padding: EdgeInsets.only(top: 17),
-                  child: Text('Result: ${snapshot.data}'),
-                  )
-                ];
+
+                return Center(child: Text('Result: ${snapshot.data}'),);
+
               }else if(snapshot.hasError){
-                children = <Widget>[
-                 const Icon(
-                    Icons.error_outline,
-                    color: Colors.red,
-                    size: 60,
-                  ),
-            Padding(padding: EdgeInsets.only(top: 17),
-            child: Text('Result: ${snapshot.data}'),
-            )
-                ];
+            return Text('Result: ${snapshot.data}');
               }else{
                CircularProgressIndicator();
               }
