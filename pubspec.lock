@@ -62,25 +62,32 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_redux:
+    dependency: "direct main"
+    description:
+      name: flutter_redux
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.8.2"
   flutter_test:
     dependency: "direct dev"
     description: flutter
     source: sdk
     version: "0.0.0"
-  http:
+  get:
     dependency: "direct main"
     description:
-      name: http
+      name: get
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.13.3"
-  http_parser:
+    version: "4.1.4"
+  intl:
     dependency: transitive
     description:
-      name: http_parser
+      name: intl
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.0"
+    version: "0.17.0"
   matcher:
     dependency: transitive
     description:
@@ -102,13 +109,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.0"
-  pedantic:
-    dependency: transitive
+  redux:
+    dependency: "direct main"
     description:
-      name: pedantic
+      name: redux
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.11.0"
+    version: "5.0.0"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -142,6 +149,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
+  syncfusion_flutter_charts:
+    dependency: "direct main"
+    description:
+      name: syncfusion_flutter_charts
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "19.2.46"
+  syncfusion_flutter_core:
+    dependency: transitive
+    description:
+      name: syncfusion_flutter_core
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "19.2.46"
   term_glyph:
     dependency: transitive
     description:

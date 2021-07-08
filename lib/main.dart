@@ -1,188 +1,85 @@
-
-import 'dart:convert';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import 'package:http/http.dart'as http;
-
-import 'data_model.dart';
-
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:get/get.dart';
+import 'package:post/redux/model/item_model.dart';
+import 'package:post/redux/redux_/reducer.dart';
+import 'package:post/redux/redux_screen/data_list.dart';
+import 'package:post/redux/widgets/show_dialouge.dart';
+import 'package:redux/redux.dart';
 void main(){
-  runApp(MaterialApp(
-    home: Myapp(),
-  ));
+  final store = new Store<List<ItemModel>>(ItemReducer,initialState: List());
+  runApp(HomeApp(store: store,));
 }
-
-class Myapp extends StatefulWidget {
-  const Myapp({Key? key}) : super(key: key);
-
-  @override
-  _MyappState createState() => _MyappState();
-}
-
-class _MyappState extends State<Myapp> {
-  Future<String>? resdata;
-  bool isloading = false;
-  var id = TextEditingController();
-  var customer =TextEditingController();
-  var quantity = TextEditingController();
-  var price = TextEditingController();
-
-  onclick(){
-
-  }
-  apidata(id,cu,qu,pr)async{
-    var res = await http.post(
-      Uri.https("reqbin.com", "/echo/post/json"),
-      body: jsonEncode(<String, dynamic> {
-        "Id": id,
-        "Customer": cu,
-        "Quantity": qu,
-        "Price": pr
-      }),
-
-    );
-      if(res.statusCode == 200){
-        var data = dataModelFromJson(res.body);
-        setState(() {
-          resdata = Future.delayed(Duration.zero).then((value) {
-            print(data.success);
-            return data.success;
-          });
-        });
-      }else{
-        setState(() {
-          resdata = Future.delayed(Duration.zero).then((value) {
-            isloading = false;
-            return 'false';
-          });
-        });
-      }
-  }
-
-
-
+class HomeApp extends StatelessWidget {
+  Store<List<ItemModel>> store;
+    HomeApp({required this.store});
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("api res"),
+    return StoreProvider(
+      store: store,
+      child: GetMaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(brightness: Brightness.dark),
+        home: Scaffold(
+          floatingActionButton: FloatingActionButton(onPressed:() => _addDialog(context),child: Icon(Icons.add),),
+          appBar: AppBar(
+            title: Text("DEMO APP"),
+          ),
+
+          body: DataList(),
+        ),
       ),
-      body: FutureBuilder(
-          future: resdata,
-          builder: (context,snapshot){
-              if(snapshot.hasData){
-
-                return Center(child: Text('Result: ${snapshot.data}'),);
-
-              }else if(snapshot.hasError){
-            return Text('Result: ${snapshot.data}');
-              }else{
-               CircularProgressIndicator();
-              }
-              return ui();
-      })
-
     );
   }
-  ui(){
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-
-        Container(
-
-          child: TextField(
-            controller: id,
-            decoration: InputDecoration(
-              hintText: 'user id',
-              hintStyle: TextStyle(
-                color: Colors.black,
-              ),
-
-              enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.black),
-              ),
-              focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.black),
-              ),
-            ),
-
-          ),
-        ),
-        Container(
-
-          child: TextField(
-            controller: customer,
-            decoration: InputDecoration(
-              hintText: 'user name',
-              hintStyle: TextStyle(
-                color: Colors.black,
-              ),
-
-              enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.black),
-              ),
-              focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.black),
-              ),
-            ),
-
-          ),
-        ),
-        Container(
-
-          child: TextField(
-            controller: quantity,
-            decoration: InputDecoration(
-              hintText: 'user quantity',
-              hintStyle: TextStyle(
-                color: Colors.black,
-              ),
-
-              enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.black),
-              ),
-              focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.black),
-              ),
-            ),
-
-          ),
-        ),
-        Container(
-
-          child: TextField(
-            controller: price,
-            decoration: InputDecoration(
-              hintText: 'price',
-              hintStyle: TextStyle(
-                color: Colors.black,
-              ),
-
-              enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.black),
-              ),
-              focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.black),
-              ),
-            ),
-
-          ),
-        ),
-
-
-        Center(
-          child: TextButton(child: Text('submit'),
-            onPressed:  (){
-              apidata(id.text,customer.text,quantity.text,price.text);
-            }
-          ),
-        ),
-      ],
-    );
-  }
-
+}
+_addDialog(BuildContext context){
+  showDialog(context: context, builder: (context)=> AddItemDialog());
 }
 
+
+
+
+
+
+
+//
+//
+// void main() {
+//   runApp(MaterialApp(
+//     home: Homepage(),
+//   ));
+// }
+//
+//
+//
+// class Homepage extends StatelessWidget {
+//   var tabs = [
+//    Column(children: [Text("Line "),Icon(Icons.show_chart)],),
+//     Column(children: [Text("Pie"),Icon(Icons.pie_chart)],),
+//     Column(children: [Text("bar"),Icon(Icons.show_chart)],),
+//   ];
+//   var TabView = [
+//     LineChartPage(),
+//     PieChartPage(),
+//     BarChartPage(),
+//   ];
+//   @override
+//   Widget build(BuildContext context) {
+//     return DefaultTabController(
+//
+//       length: 3,
+//       child: Scaffold(
+//         appBar: AppBar(
+//           title: Text("Chart views"),
+//           bottom: TabBar(
+//             tabs: tabs,
+//           )
+//
+//         ),
+//         body: TabBarView(
+//             children: TabView
+//         ),
+//     ),
+//     );
+//   }
+// }
