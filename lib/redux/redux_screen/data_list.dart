@@ -7,11 +7,12 @@ class DataList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StoreConnector<List<ItemModel>, List<ItemModel>>(
+      converter: (store) => store.state,
       builder: (context, list) => ListView.builder(
         itemCount: list.length,
         itemBuilder: (context, index) => Items(item: list[index], ),
       ),
-      converter: (store) => store.state,
+
     );
   }
 }
